@@ -829,7 +829,7 @@ render();
 
 // Recalculate map size on resize and on load (handles mobile layout settle)
 window.addEventListener("resize", () => { map.invalidateSize(); render(); });
-window.addEventListener("load", () => setTimeout(() => map.invalidateSize(), 100));
+window.addEventListener("load", () => setTimeout(() => { map.invalidateSize(); render(); }, 100));
 </script>
 </body>
 </html>
