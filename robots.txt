@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chartairinc.com/sitemap.xml
