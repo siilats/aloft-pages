@@ -642,6 +642,18 @@
     .flight-guide details { border-top:1px solid var(--border); padding:18px 0; }
     .flight-guide summary { cursor:pointer; font-size:1.05rem; font-weight:700; }
     .flight-guide details p { margin:12px 0 0; }
+  /* Compact, opt-in chat prompt; the full Tawk widget stays hidden until requested. */
+  .chat-prompt[hidden], .chat-reopen[hidden] { display:none !important; }
+  .chat-prompt { position:fixed; right:18px; bottom:18px; z-index:9998; width:min(330px,calc(100vw - 36px)); background:#fff; border:1px solid #dde1ea; border-radius:12px; box-shadow:0 5px 22px #09172b24; padding:13px; font-family:inherit; }
+  .chat-prompt-head { display:flex; align-items:center; gap:8px; font-size:.82rem; color:#172655; margin-bottom:9px; }
+  .chat-status-dot { width:9px; height:9px; flex:none; border-radius:50%; background:#9ca3af; }
+  .chat-status-dot.online { background:#16a34a; box-shadow:0 0 0 3px #16a34a22; }
+  .chat-prompt-head button { margin-left:auto; border:0; background:transparent; font-size:20px; cursor:pointer; color:#6b7280; }
+  .chat-prompt label { display:block; font-size:.85rem; font-weight:700; margin-bottom:7px; }
+  .chat-prompt form { display:flex; gap:6px; }
+  .chat-prompt input { min-width:0; flex:1; border:1px solid #cbd5e1; border-radius:6px; padding:9px; font:inherit; font-size:.85rem; }
+  .chat-prompt form button { background:#172655; color:white; border:0; border-radius:6px; padding:8px 12px; cursor:pointer; font:inherit; }
+  .chat-reopen { position:fixed; right:18px; bottom:18px; z-index:9998; border:0; border-radius:24px; background:#172655; color:white; padding:11px 16px; font:inherit; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -795,7 +807,7 @@ tagWhatsappLinks();
 // ── DATA ────────────────────────────────────────────────────────────────────
 const FLIGHTS = [{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Memphis Intl","origin_code":"MEM","origin_state":"Tennessee","destination_airport":"Roswell","destination_code":"ROW","destination_state":"New Mexico","aircraft":"Bombardier Challenger 601","date_from":"11/21/26","date_to":"11/22/26","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KMEM","destination_icao":"KROW"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Moore County","origin_code":"SOP","origin_state":"North Carolina","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"11/23/26","date_to":"11/28/26","duration":"01:36","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KSOP","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Teterboro","destination_code":"TEB","destination_state":"New Jersey","aircraft":"Bombardier Lear 35A","date_from":"11/23/26","date_to":"11/25/26","duration":"02:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KTEB"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Myrtle Beach Intl","destination_code":"MYR","destination_state":"South Carolina","aircraft":"Bombardier Challenger 601","date_from":"11/23/26","date_to":"11/28/26","duration":"01:24","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KMYR"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Myrtle Beach Intl","origin_code":"MYR","origin_state":"South Carolina","destination_airport":"Naples","destination_code":"APF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"11/28/26","date_to":"11/29/26","duration":"01:36","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KMYR","destination_icao":"KAPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laconia Muni","destination_code":"LCI","destination_state":"New Hampshire","aircraft":"Bombardier Lear 35A","date_from":"11/25/26","date_to":"11/30/26","duration":"03:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLCI"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Austin Bergstrom Intl","destination_code":"AUS","destination_state":"Texas","aircraft":"Bombardier Lear 35A","date_from":"11/30/26","date_to":"12/01/26","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAUS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Marana Northwest Regional","destination_code":"AVQ","destination_state":"Arizona","aircraft":"Bombardier Lear 35A","date_from":"12/02/26","date_to":"12/07/26","duration":"05:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAVQ"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/14/26","duration":"03:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Cherry Capital","destination_code":"TVC","destination_state":"Michigan","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/15/26","duration":"03:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KTVC"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"John Glenn Columbus Intl","destination_code":"CMH","destination_state":"Ohio","aircraft":"Bombardier Challenger 601","date_from":"12/22/26","date_to":"12/27/26","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KCMH"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Greater Kankakee","destination_code":"IKK","destination_state":"Illinois","aircraft":"Bombardier Lear 35A","date_from":"12/23/26","date_to":"12/28/26","duration":"02:48","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KIKK"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Lancaster","destination_code":"LNS","destination_state":"Pennsylvania","aircraft":"Bombardier Lear 35A","date_from":"12/28/26","date_to":"12/30/26","duration":"02:24","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLNS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"John Glenn Columbus Intl","origin_code":"CMH","origin_state":"Ohio","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KCMH","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laurence G Hanscom Fld","destination_code":"BED","destination_state":"Massachusetts","aircraft":"Bombardier Lear 35A","date_from":"12/30/26","date_to":"01/04/27","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KBED"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Dekalb Peachtree","destination_code":"PDK","destination_state":"Georgia","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"01:30","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KPDK"}];
 
-const UPDATED_AT = "2026-11-22T21:00:18.051309+00:00";
+const UPDATED_AT = "2026-11-22T21:03:45.135136+00:00";
 document.getElementById("year").textContent = new Date().getFullYear();
 if (UPDATED_AT) {
   const updated = new Date(UPDATED_AT);
@@ -1099,9 +1111,72 @@ render();
 window.addEventListener("resize", () => { map.invalidateSize(); render(); });
 window.addEventListener("load", () => setTimeout(() => { map.invalidateSize(); render(); }, 100));
 </script>
+<aside class="chat-prompt" id="chat-prompt" aria-label="Ask Aloft about a flight">
+  <div class="chat-prompt-head"><span class="chat-status-dot" id="chat-status-dot"></span><span id="chat-status-text">Checking availability…</span><button type="button" id="chat-dismiss" aria-label="Minimize chat prompt">×</button></div>
+  <label for="chat-answer" id="chat-question">Where would you like to go?</label>
+  <form id="chat-prompt-form">
+    <input id="chat-answer" type="text" maxlength="200" autocomplete="off" placeholder="City or destination" required>
+    <button type="submit" id="chat-next">Next</button>
+  </form>
+</aside>
+<button class="chat-reopen" id="chat-reopen" type="button" hidden>Ask Aloft</button>
 <!-- Aloft live chat: replies are handled in the tawk.to mobile app. -->
 <script type="text/javascript">
 var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+const chatPrompt = document.getElementById('chat-prompt');
+const chatAnswer = document.getElementById('chat-answer');
+const chatQuestion = document.getElementById('chat-question');
+const chatReopen = document.getElementById('chat-reopen');
+let chatDestination = '';
+let chatStep = 'destination';
+function updateChatStatus(status) {
+  const online = status === 'online';
+  document.getElementById('chat-status-dot').classList.toggle('online', online);
+  document.getElementById('chat-status-text').textContent = online ? 'We are online' : status === 'away' ? 'Currently away' : 'Leave us a message';
+}
+Tawk_API.onLoad = function () {
+  Tawk_API.hideWidget();
+  updateChatStatus(Tawk_API.getStatus());
+};
+Tawk_API.onStatusChange = updateChatStatus;
+document.getElementById('chat-dismiss').addEventListener('click', () => {
+  chatPrompt.hidden = true;
+  chatReopen.hidden = false;
+});
+chatReopen.addEventListener('click', () => {
+  chatPrompt.hidden = false;
+  chatReopen.hidden = true;
+  chatAnswer.focus();
+});
+document.getElementById('chat-prompt-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const value = chatAnswer.value.trim();
+  if (!value) { chatAnswer.focus(); return; }
+  if (chatStep === 'destination') {
+    chatDestination = value;
+    chatStep = 'name';
+    chatQuestion.textContent = "What's your name?";
+    chatAnswer.value = '';
+    chatAnswer.placeholder = 'Your name (required)';
+    chatAnswer.setAttribute('autocomplete', 'name');
+    document.getElementById('chat-next').textContent = 'Chat';
+    chatAnswer.focus();
+    return;
+  }
+  const name = value;
+  // Preserve the visitor's details in the Tawk chat; the visitor sends the draft.
+  if (typeof Tawk_API.setAttributes === 'function') {
+    Tawk_API.setAttributes({ 'visitor-name': name, 'destination': chatDestination }, function () {});
+  }
+  if (typeof Tawk_API.setChatInputMessage === 'function') {
+    Tawk_API.setChatInputMessage("Hello Aloft, I'm " + name + ". I would like to go to " + chatDestination + ".");
+  }
+  chatPrompt.hidden = true;
+  chatReopen.hidden = false;
+  if (typeof Tawk_API.showWidget === 'function') Tawk_API.showWidget();
+  if (typeof Tawk_API.maximize === 'function') Tawk_API.maximize();
+});
+
 (function () {
   var chat = document.createElement('script');
   var first = document.getElementsByTagName('script')[0];
