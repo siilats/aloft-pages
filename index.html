@@ -576,8 +576,11 @@
     h1 { font-size:clamp(4.5rem,8.4vw,8.5rem); font-weight:800; letter-spacing:-.065em; line-height:.85; margin:0 0 28px; }
     h1 span { display:block; animation:title-in .9s both; } h1 span+span { color:#8fd5f1; animation-delay:.14s; }
     .hero-copy>p:not(.eyebrow) { max-width:340px; font-size:1.05rem; line-height:1.65; color:#c3cedc; padding-right:24px; }
-    .hero-cta { display:inline-flex; gap:32px; align-items:center; color:white; text-decoration:none; border-bottom:1px solid #8fd5f1; padding:16px 0 10px; margin-top:18px; font-weight:600; }
+    .hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; margin:24px 24px 0 0; }
+    .hero-cta { display:inline-flex; gap:10px; align-items:center; color:white; text-decoration:none; border-bottom:1px solid #8fd5f1; padding:10px 0; font-weight:600; }
     .hero-cta:hover { color:#8fd5f1; }
+    .hero-cta-primary { background:#8fd5f1; color:#09172b; border:0; border-radius:6px; padding:13px 17px; }
+    .hero-cta-primary:hover { background:#c3edff; color:#09172b; }
     .hero-gallery { position:relative; min-width:0; margin:28px 28px 28px 0; background:#182b40; overflow:hidden; border-radius:3px; }
     .hero-scene { position:absolute; inset:0; opacity:0; transition:opacity 1.1s ease; margin:0; }
     .hero-scene.is-active { opacity:1; z-index:1; }
@@ -655,16 +658,21 @@
   .chat-prompt form button { background:#172655; color:white; border:0; border-radius:6px; padding:8px 12px; cursor:pointer; font:inherit; }
   .chat-reopen { position:fixed; right:18px; bottom:18px; z-index:9998; border:0; border-radius:24px; background:#172655; color:white; padding:11px 16px; font:inherit; cursor:pointer; }
 
-    .alerts-signup { margin:28px 0; padding:20px; border:1px solid var(--border); border-radius:12px; background:#fff; }
-    .alerts-signup h2 { margin:0 0 5px; font-size:1.2rem; }
-    .alerts-signup p { margin:0 0 12px; font-size:.85rem; color:var(--muted); }
+    .alerts-signup { margin:14px 0; padding:clamp(16px,3vw,24px); scroll-margin-top:16px; border:1px solid #aac8e3; border-top:4px solid var(--blue); border-radius:10px; background:#edf6fc; color:var(--navy); }
+    #alerts-signup-slot { padding:0 16px; }
+    .alerts-signup h2 { margin:0 0 6px; font-size:1.4rem; }
+    .alerts-signup p { margin:0 0 14px; font-size:.875rem; color:#40536c; line-height:1.5; }
     .alerts-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
     .alerts-fields label { display:flex; flex-direction:column; gap:5px; font-size:.8rem; font-weight:600; }
-    .alerts-fields input { min-width:0; width:100%; border:1px solid var(--border); border-radius:7px; padding:10px; font:inherit; }
+    .alerts-fields input { min-width:0; width:100%; border:1px solid #9eb4c9; border-radius:7px; padding:10px; font:inherit; font-size:1rem; }
     .alerts-consent { display:flex; align-items:flex-start; gap:8px; margin:12px 0; font-size:.77rem; }
-    .alerts-submit { border:0; background:var(--blue); color:white; padding:10px 16px; border-radius:7px; cursor:pointer; }
+    .alerts-submit { border:0; background:var(--blue); color:white; min-height:44px; padding:10px 16px; border-radius:7px; cursor:pointer; font:inherit; font-weight:700; }
+    .alerts-submit:hover { background:var(--navy); }
+    .alerts-submit:focus-visible { outline:3px solid #3683af; outline-offset:4px; }
+    .alerts-submit:disabled { opacity:.65; cursor:wait; }
     #alerts-result { margin-top:10px; }
-    @media(max-width:600px) { .alerts-fields { grid-template-columns:1fr; } }
+    #alerts-result:empty { margin:0; }
+    @media(max-width:600px) { .alerts-fields { grid-template-columns:1fr; } .alerts-submit { width:100%; } }
   </style>
 </head>
 <body>
@@ -690,7 +698,10 @@
     <p class="eyebrow">ALOFT AVIATION · PRIVATE CHARTER</p>
     <h1 id="page-title"><span>EMPTY</span> <span>LEGS.</span></h1>
     <p>Private jet empty leg flights.<br>Extraordinary aircraft.<br>Your next private escape starts here.</p>
-    <a class="hero-cta" href="#available-flights">Explore available flights <span aria-hidden="true">↗</span></a>
+    <div class="hero-actions">
+      <a class="hero-cta hero-cta-primary" href="#empty-leg-alerts">Get Empty Leg Alerts <span aria-hidden="true">↓</span></a>
+      <a class="hero-cta" href="#available-flights">Explore available flights <span aria-hidden="true">↗</span></a>
+    </div>
   </div>
   <div class="hero-gallery" aria-label="Explore our aircraft">
     <figure class="hero-scene is-active">
@@ -742,6 +753,23 @@
     </div>
 
     <div class="cards" id="cards" aria-live="polite"></div>
+    <div id="alerts-signup-slot">
+<section class="alerts-signup" id="empty-leg-alerts" aria-labelledby="alerts-title" tabindex="-1">
+  <h2 id="alerts-title">Get Empty Leg Alerts</h2>
+  <p>Get an email when an empty leg is available within 100 nautical miles of both airports.</p>
+  <form id="alerts-form">
+    <div class="alerts-fields">
+      <label>Flying from — airport code<input name="from" maxlength="4" pattern="[A-Za-z0-9]{3,4}" placeholder="Nearest airport" required autocomplete="off"><button type="button" id="alerts-location-button" style="margin-top:5px;padding:7px 10px;cursor:pointer">Use my location</button><small id="alerts-location-status" role="status"></small></label>
+      <label>Flying to — airport code<input name="to" maxlength="4" pattern="[A-Za-z0-9]{3,4}" placeholder="TEB" value="TEB" required autocomplete="off"></label>
+      <label>Email address<input name="email" type="email" placeholder="you@example.com" required></label>
+      <label for="alerts-phone">Phone number (WhatsApp, optional)<input id="alerts-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="+1 305 555 0123"></label>
+    </div>
+    <label class="alerts-consent"><input name="consent" type="checkbox" required> I agree to receive empty-leg email alerts for this route. I can unsubscribe at any time.</label>
+    <button class="alerts-submit" type="submit">Notify me</button>
+    <p id="alerts-result" role="status" aria-live="polite"></p>
+  </form>
+</section>
+    </div>
 
     <div class="features">
       <div class="feature">
@@ -802,21 +830,7 @@
     <details><summary>What if no empty leg matches my plans?</summary><p>Empty legs have limited routing and timing flexibility. Contact <a href="https://www.charteraloft.com/">Aloft Aviation for private charter options</a> if you need a different airport, departure time or return flight.</p></details>
   </div>
 </section>
-<section class="alerts-signup" id="empty-leg-alerts" aria-labelledby="alerts-title">
-  <h2 id="alerts-title">Get Empty Leg Alerts</h2>
-  <p>We'll email you when a flight becomes available within 100 nautical miles of both airports. No WhatsApp messages will be sent.</p>
-  <form id="alerts-form">
-    <div class="alerts-fields">
-      <label>Flying from — airport code<input name="from" maxlength="4" pattern="[A-Za-z0-9]{3,4}" placeholder="Nearest airport" required autocomplete="off"><button type="button" id="alerts-location-button" style="margin-top:5px;padding:7px 10px;cursor:pointer">Use my location</button><small id="alerts-location-status" role="status"></small></label>
-      <label>Flying to — airport code<input name="to" maxlength="4" pattern="[A-Za-z0-9]{3,4}" placeholder="TEB" value="TEB" required autocomplete="off"></label>
-      <label>Email address<input name="email" type="email" placeholder="you@example.com" required></label>
-      <label>WhatsApp number (optional)<input name="whatsapp" type="tel" maxlength="30" placeholder="+1 305 555 0123"></label>
-    </div>
-    <label class="alerts-consent"><input name="consent" type="checkbox" required> I agree to receive empty-leg email alerts for this route. I can unsubscribe at any time.</label>
-    <button class="alerts-submit" type="submit">Notify me</button>
-    <p id="alerts-result" role="status" aria-live="polite"></p>
-  </form>
-</section>
+
 </main>
 <footer class="aloft-footer">
   <div class="footer-grid">
@@ -833,7 +847,7 @@ tagWhatsappLinks();
 // ── DATA ────────────────────────────────────────────────────────────────────
 const FLIGHTS = [{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Teterboro","destination_code":"TEB","destination_state":"New Jersey","aircraft":"Bombardier Lear 35A","date_from":"11/23/26","date_to":"11/25/26","duration":"02:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KTEB"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Myrtle Beach Intl","destination_code":"MYR","destination_state":"South Carolina","aircraft":"Bombardier Challenger 601","date_from":"11/23/26","date_to":"11/28/26","duration":"01:24","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KMYR"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Myrtle Beach Intl","origin_code":"MYR","origin_state":"South Carolina","destination_airport":"Naples","destination_code":"APF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"11/28/26","date_to":"11/29/26","duration":"01:36","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KMYR","destination_icao":"KAPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laconia Muni","destination_code":"LCI","destination_state":"New Hampshire","aircraft":"Bombardier Lear 35A","date_from":"11/25/26","date_to":"11/30/26","duration":"03:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLCI"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Austin Bergstrom Intl","destination_code":"AUS","destination_state":"Texas","aircraft":"Bombardier Lear 35A","date_from":"11/30/26","date_to":"12/01/26","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAUS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Marana Northwest Regional","destination_code":"AVQ","destination_state":"Arizona","aircraft":"Bombardier Lear 35A","date_from":"12/02/26","date_to":"12/07/26","duration":"05:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAVQ"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/14/26","duration":"03:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Cherry Capital","destination_code":"TVC","destination_state":"Michigan","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/15/26","duration":"03:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KTVC"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"John Glenn Columbus Intl","destination_code":"CMH","destination_state":"Ohio","aircraft":"Bombardier Challenger 601","date_from":"12/19/26","date_to":"12/24/26","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KCMH"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Greater Kankakee","destination_code":"IKK","destination_state":"Illinois","aircraft":"Bombardier Lear 35A","date_from":"12/19/26","date_to":"12/24/26","duration":"02:48","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KIKK"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Lancaster","destination_code":"LNS","destination_state":"Pennsylvania","aircraft":"Bombardier Lear 35A","date_from":"12/28/26","date_to":"12/30/26","duration":"02:24","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLNS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"John Glenn Columbus Intl","origin_code":"CMH","origin_state":"Ohio","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KCMH","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laurence G Hanscom Fld","destination_code":"BED","destination_state":"Massachusetts","aircraft":"Bombardier Lear 35A","date_from":"12/30/26","date_to":"01/04/27","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KBED"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Dekalb Peachtree","destination_code":"PDK","destination_state":"Georgia","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"01:30","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KPDK"}];
 
-const UPDATED_AT = "2026-11-23T01:15:52.293274+00:00";
+const UPDATED_AT = "2026-11-23T16:51:04.700544+00:00";
 document.getElementById("year").textContent = new Date().getFullYear();
 if (UPDATED_AT) {
   const updated = new Date(UPDATED_AT);
@@ -993,9 +1007,18 @@ function render() {
 
   // Cards
   const el = document.getElementById("cards");
+  const signup = document.getElementById("empty-leg-alerts");
+  const focusedElement = document.activeElement;
+  // Detach the form so rebuilding the cards preserves its inputs and listeners.
+  signup.remove();
   el.innerHTML = filtered.length
     ? filtered.map((f,i)=>cardHTML(f,i)).join("")
     : `<div class="no-results">No upcoming flights match your search. Contact Aloft at (864) 972-5661 for other charter options.</div>`;
+  const cards = el.querySelectorAll(".card");
+  const previousCard = cards[Math.min(cards.length, 2) - 1];
+  if (previousCard) previousCard.after(signup);
+  else document.getElementById("alerts-signup-slot").append(signup);
+  if (signup.contains(focusedElement)) focusedElement.focus({ preventScroll: true });
   document.getElementById("ctrl-count").textContent =
     `${filtered.length} flight${filtered.length!==1?"s":""}`;
 
@@ -1262,7 +1285,7 @@ document.getElementById('chat-prompt-form').addEventListener('submit', event => 
     button.disabled=true;result.textContent='Submitting…';
     try {
       if(endpoint.includes('REPLACE_ACCOUNT_SUBDOMAIN'))throw Error('Alerts are not configured yet.');
-      const response=await fetch(endpoint+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from,to,email:data.get('email'),whatsapp:data.get('whatsapp'),consent:data.get('consent')==='on'})});
+      const response=await fetch(endpoint+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from,to,email:data.get('email'),whatsapp:data.get('phone'),consent:data.get('consent')==='on'})});
       const body=await response.json();if(!response.ok)throw Error(body.error||'Could not subscribe');
       result.textContent=body.message;
       form.reset();
