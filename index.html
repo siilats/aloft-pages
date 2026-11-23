@@ -342,6 +342,8 @@
     }
 
     .card-details { display: flex; gap: 16px; align-items: flex-start; }
+    .card-estimate { margin-bottom:10px; color:var(--navy); font-size:.875rem; line-height:1.45; }
+    .card-estimate span { display:block; color:var(--muted); font-size:.75rem; }
     .card-meta { flex: 1; display: flex; flex-direction: column; gap: 5px; }
     .meta-row {
       display: flex;
@@ -827,7 +829,7 @@
     <h2>Empty-leg charter questions</h2>
     <details><summary>How do I get a firm quote for an empty-leg flight?</summary><p>Select Request a Quote on a flight to open WhatsApp with its route, dates and aircraft, or use the live chat in the corner of this page. Tell a real person your passenger count and preferred timing. Aloft will confirm availability, the total charter price and applicable conditions before you book.</p></details>
     <details><summary>Can I book a Challenger 601 or Learjet 35A empty leg?</summary><p>Use the aircraft filter to see current Bombardier Challenger 601 and Learjet 35A listings. Each card shows its route, availability window, estimated duration and seats. Aircraft and schedules remain subject to confirmation.</p></details>
-    <details><summary>Are empty-leg prices per seat or for the whole aircraft?</summary><p>Ask for the total whole-aircraft charter quote for your selected flight. The passenger capacity shown on a card is not an offer to sell individual seats. Confirm the final price, inclusions and terms with Aloft.</p></details>
+    <details><summary>Are empty-leg prices per seat or for the whole aircraft?</summary><p>Card estimates cover the whole aircraft and are calculated from the listed flight time and starting hourly rate. Request a firm quote to confirm the total price, inclusions and terms with Aloft.</p></details>
     <details><summary>What if no empty leg matches my plans?</summary><p>Empty legs have limited routing and timing flexibility. Contact <a href="https://www.charteraloft.com/">Aloft Aviation for private charter options</a> if you need a different airport, departure time or return flight.</p></details>
   </div>
 </section>
@@ -848,7 +850,7 @@ tagWhatsappLinks();
 // ── DATA ────────────────────────────────────────────────────────────────────
 const FLIGHTS = [{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Teterboro","destination_code":"TEB","destination_state":"New Jersey","aircraft":"Bombardier Lear 35A","date_from":"11/23/26","date_to":"11/25/26","duration":"02:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KTEB"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Myrtle Beach Intl","destination_code":"MYR","destination_state":"South Carolina","aircraft":"Bombardier Challenger 601","date_from":"11/23/26","date_to":"11/28/26","duration":"01:24","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KMYR"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Myrtle Beach Intl","origin_code":"MYR","origin_state":"South Carolina","destination_airport":"Naples","destination_code":"APF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"11/28/26","date_to":"11/29/26","duration":"01:36","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KMYR","destination_icao":"KAPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laconia Muni","destination_code":"LCI","destination_state":"New Hampshire","aircraft":"Bombardier Lear 35A","date_from":"11/25/26","date_to":"11/30/26","duration":"03:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLCI"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Austin Bergstrom Intl","destination_code":"AUS","destination_state":"Texas","aircraft":"Bombardier Lear 35A","date_from":"11/30/26","date_to":"12/01/26","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAUS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Marana Northwest Regional","destination_code":"AVQ","destination_state":"Arizona","aircraft":"Bombardier Lear 35A","date_from":"12/02/26","date_to":"12/07/26","duration":"05:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAVQ"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/14/26","duration":"03:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Cherry Capital","destination_code":"TVC","destination_state":"Michigan","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/15/26","duration":"03:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KTVC"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"John Glenn Columbus Intl","destination_code":"CMH","destination_state":"Ohio","aircraft":"Bombardier Challenger 601","date_from":"12/19/26","date_to":"12/24/26","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KCMH"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Greater Kankakee","destination_code":"IKK","destination_state":"Illinois","aircraft":"Bombardier Lear 35A","date_from":"12/19/26","date_to":"12/24/26","duration":"02:48","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KIKK"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Lancaster","destination_code":"LNS","destination_state":"Pennsylvania","aircraft":"Bombardier Lear 35A","date_from":"12/28/26","date_to":"12/30/26","duration":"02:24","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLNS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"John Glenn Columbus Intl","origin_code":"CMH","origin_state":"Ohio","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KCMH","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laurence G Hanscom Fld","destination_code":"BED","destination_state":"Massachusetts","aircraft":"Bombardier Lear 35A","date_from":"12/30/26","date_to":"01/04/27","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KBED"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Dekalb Peachtree","destination_code":"PDK","destination_state":"Georgia","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"01:30","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KPDK"}];
 
-const UPDATED_AT = "2026-11-23T17:02:40.623912+00:00";
+const UPDATED_AT = "2026-11-23T17:23:04.020181+00:00";
 document.getElementById("year").textContent = new Date().getFullYear();
 if (UPDATED_AT) {
   const updated = new Date(UPDATED_AT);
@@ -873,10 +875,24 @@ function fmtDate(s) {
 }
 function parseDur(s) { const [h,m]=s.split(":").map(Number); return h*60+m; }
 function fmtDur(s) {
+  if (!s) return "Duration unavailable";
   const [h,m]=s.split(":").map(Number);
   if (!h) return `${m}m`;
   if (!m) return `${h}h`;
   return `${h}h ${m}m`;
+}
+
+const charterCurrency = new Intl.NumberFormat("en-US", {
+  style: "currency", currency: "USD", maximumFractionDigits: 0,
+});
+
+function charterEstimate(flight) {
+  const aircraft = flight.aircraft || "";
+  const hourly = /\blear(?:jet)?\b/i.test(aircraft) ? 6000 : /\bchallenger\b/i.test(aircraft) ? 8000 : 0;
+  if (!hourly || !/^\d+:[0-5]\d$/.test(flight.duration)) return null;
+  const minutes = parseDur(flight.duration);
+  if (minutes <= 0) return null;
+  return { total: charterCurrency.format(minutes * hourly / 60), hourly: charterCurrency.format(hourly) };
 }
 
 // ── Curved arc between two lat/lng points ───────────────────────────────────
@@ -953,6 +969,7 @@ const USERS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const SEND = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
 
 function cardHTML(f, idx) {
+  const estimate = charterEstimate(f);
   return `<div class="card" data-idx="${idx}" tabindex="0" role="group" aria-label="${f.origin_code} to ${f.destination_code}" onkeydown="if(event.key==='Enter')activateCard(${idx})"
     onmouseenter="highlightRoute(${idx})"
     onmouseleave="dimRoutes()"
@@ -967,6 +984,7 @@ function cardHTML(f, idx) {
         <span><span class="apt-label apt-full">${f.destination_airport} (${f.destination_code})</span><span class="apt-label apt-short">${f.destination_code}</span><span class="apt-state">${f.destination_state}</span></span>
       </div>
       <div class="card-aircraft">${f.aircraft}</div>
+      ${estimate ? `<p class="card-estimate">Estimated whole-aircraft charter from <strong>${estimate.total}</strong><span>Based on ${estimate.hourly}/hr and listed flight time</span></p>` : ""}
       <div class="card-details">
         <div class="card-meta">
           <div class="meta-row">${CAL} <strong>Available ${fmtDate(f.date_from)} – ${fmtDate(f.date_to)}</strong></div>
@@ -986,6 +1004,7 @@ function cardHTML(f, idx) {
 
 function render() {
   const q  = document.getElementById("search").value.trim().toLowerCase();
+  const route = q.match(/^([a-z0-9]{3,4})-([a-z0-9]{3,4})$/i);
   const ac = document.getElementById("filter-aircraft").value;
   const so = document.getElementById("sort").value;
 
@@ -993,6 +1012,7 @@ function render() {
     const today = new Date(); today.setHours(0,0,0,0);
     if (parseDate(f.date_to) < today) return false;
     if (ac && f.aircraft !== ac) return false;
+    if (route) return f.origin_code?.toLowerCase() === route[1] && f.destination_code?.toLowerCase() === route[2];
     if (q) {
       const h = [f.aircraft,f.origin_code,f.origin_airport,f.origin_state,
                  f.destination_code,f.destination_airport,f.destination_state].join(" ").toLowerCase();
@@ -1135,8 +1155,13 @@ const sel = document.getElementById("filter-aircraft");
 });
 
 const aircraftTypes = { challenger: 'Bombardier Challenger 601', lear: 'Bombardier Lear 35A', lear35a: 'Bombardier Lear 35A' };
-const initialType = new URL(location.href).searchParams.get('type')?.toLowerCase();
+const flightParams = new URLSearchParams(location.search);
+const initialType = flightParams.get('type')?.toLowerCase();
 if (aircraftTypes[initialType]) sel.value = aircraftTypes[initialType];
+const initialRoute = flightParams.get('route');
+if (/^[a-z0-9]{3,4}-[a-z0-9]{3,4}$/i.test(initialRoute)) {
+  document.getElementById('search').value = initialRoute.toUpperCase();
+}
 sel.addEventListener('input', () => {
   const url = new URL(location.href);
   const type = sel.value === aircraftTypes.challenger ? 'challenger' : sel.value === aircraftTypes.lear ? 'lear35a' : '';
