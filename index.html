@@ -64,12 +64,15 @@
     const META_CAPI_URL = "https://aloft-conversions.arvelda.workers.dev/contact";
     const GOOGLE_ADS_CONVERSION = "AW-18585665146/PX5bCKmz77sdEPr8qp5F"; // AW-account/conversion-label from Google Ads
     if (/^AW-\d+\/[^/]+$/.test(GOOGLE_ADS_CONVERSION)) gtag('config', GOOGLE_ADS_CONVERSION.split('/')[0]);
+    function getFlightTrackingId(flight) {
+      return String(flight.id ?? [flight.origin_code, flight.destination_code, flight.date_from, flight.date_to, flight.aircraft].join("|"));
+    }
     // Record which specific empty-leg listing a visitor selects.
     // Use a stable flight identifier rather than its position in the filtered list.
     function trackEmptyLegClick(flight) {
       if (!flight) return;
       const details = {
-        flight_id: String(flight.id ?? [flight.origin_code, flight.destination_code, flight.date_from, flight.date_to, flight.aircraft].join("|")),
+        flight_id: getFlightTrackingId(flight),
         origin_airport: flight.origin_code,
         destination_airport: flight.destination_code,
         aircraft: flight.aircraft,
@@ -122,17 +125,18 @@
     function trackQuoteClick(flight, placement) {
       const details = { contact_method: "whatsapp", button_location: placement };
       if (flight) Object.assign(details, {
+        flight_id: getFlightTrackingId(flight),
         origin_airport: flight.origin_code,
         destination_airport: flight.destination_code,
         aircraft: flight.aircraft,
         departure_date: flight.date_from,
         availability_end_date: flight.date_to
       });
-      gtag("event", "whatsapp_quote_click", details);
+      const eventId = crypto.randomUUID();
+      gtag("event", "whatsapp_quote_click", { ...details, event_id: eventId });
       if (/^AW-\d+\/[^/]+$/.test(GOOGLE_ADS_CONVERSION)) {
         gtag('event', 'conversion', { send_to: GOOGLE_ADS_CONVERSION });
       }
-      const eventId = crypto.randomUUID();
       // One shared GTM event for additional advertising platforms. Existing
       // GA4, Google Ads and Meta delivery stays above/below until migrated.
       window.dataLayer.push({
@@ -140,6 +144,7 @@
         event_id: eventId,
         contact_method: 'whatsapp',
         button_location: placement,
+        flight_id: details.flight_id ?? null,
         origin_airport: flight ? flight.origin_code : null,
         destination_airport: flight ? flight.destination_code : null,
         aircraft: flight ? flight.aircraft : null,
@@ -870,7 +875,7 @@ tagWhatsappLinks();
 // ── DATA ────────────────────────────────────────────────────────────────────
 const FLIGHTS = [{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Teterboro","destination_code":"TEB","destination_state":"New Jersey","aircraft":"Bombardier Lear 35A","date_from":"11/23/26","date_to":"11/25/26","duration":"02:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KTEB"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Myrtle Beach Intl","destination_code":"MYR","destination_state":"South Carolina","aircraft":"Bombardier Challenger 601","date_from":"11/23/26","date_to":"11/28/26","duration":"01:24","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KMYR"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Myrtle Beach Intl","origin_code":"MYR","origin_state":"South Carolina","destination_airport":"Naples","destination_code":"APF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"11/28/26","date_to":"11/29/26","duration":"01:36","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KMYR","destination_icao":"KAPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laconia Muni","destination_code":"LCI","destination_state":"New Hampshire","aircraft":"Bombardier Lear 35A","date_from":"11/25/26","date_to":"11/30/26","duration":"03:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLCI"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Austin Bergstrom Intl","destination_code":"AUS","destination_state":"Texas","aircraft":"Bombardier Lear 35A","date_from":"11/30/26","date_to":"12/01/26","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAUS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Marana Northwest Regional","destination_code":"AVQ","destination_state":"Arizona","aircraft":"Bombardier Lear 35A","date_from":"12/02/26","date_to":"12/07/26","duration":"05:00","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KAVQ"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/14/26","duration":"03:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Marana Northwest Regional","origin_code":"AVQ","origin_state":"Arizona","destination_airport":"Cherry Capital","destination_code":"TVC","destination_state":"Michigan","aircraft":"Bombardier Lear 35A","date_from":"12/13/26","date_to":"12/15/26","duration":"03:36","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KAVQ","destination_icao":"KTVC"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"John Glenn Columbus Intl","destination_code":"CMH","destination_state":"Ohio","aircraft":"Bombardier Challenger 601","date_from":"12/19/26","date_to":"12/24/26","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KCMH"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Greater Kankakee","destination_code":"IKK","destination_state":"Illinois","aircraft":"Bombardier Lear 35A","date_from":"12/19/26","date_to":"12/24/26","duration":"02:48","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KIKK"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Lancaster","destination_code":"LNS","destination_state":"Pennsylvania","aircraft":"Bombardier Lear 35A","date_from":"12/28/26","date_to":"12/30/26","duration":"02:24","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KLNS"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"John Glenn Columbus Intl","origin_code":"CMH","origin_state":"Ohio","destination_airport":"Miami-Opa locka Executive","destination_code":"OPF","destination_state":"Florida","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"02:18","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KCMH","destination_icao":"KOPF"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/5725e64d-3174-46a8-aebe-7778b45874e1/2942ef46-485d-4f63-8ec8-f4b385efbefc.jpg?1794349957","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Laurence G Hanscom Fld","destination_code":"BED","destination_state":"Massachusetts","aircraft":"Bombardier Lear 35A","date_from":"12/30/26","date_to":"01/04/27","duration":"02:54","seats":9,"price":"Please inquire","aircraft_uuid":"5725e64d-3174-46a8-aebe-7778b45874e1","origin_icao":"KOPF","destination_icao":"KBED"},{"image_url":"https://cdn.jetinsight.com/images/aircraft/a83cb3bf-3831-4152-a160-1fd8548d315d/224826db-3c98-4fce-899a-0599ecea599f.jpg?1794349795","origin_airport":"Miami-Opa locka Executive","origin_code":"OPF","origin_state":"Florida","destination_airport":"Dekalb Peachtree","destination_code":"PDK","destination_state":"Georgia","aircraft":"Bombardier Challenger 601","date_from":"01/07/27","date_to":"01/12/27","duration":"01:30","seats":9,"price":"Please inquire","aircraft_uuid":"a83cb3bf-3831-4152-a160-1fd8548d315d","origin_icao":"KOPF","destination_icao":"KPDK"}];
 
-const UPDATED_AT = "2026-11-24T03:57:20.218309+00:00";
+const UPDATED_AT = "2026-11-24T04:07:11.680566+00:00";
 document.getElementById("year").textContent = new Date().getFullYear();
 if (UPDATED_AT) {
   const updated = new Date(UPDATED_AT);
@@ -1208,7 +1213,7 @@ window.addEventListener("load", () => setTimeout(() => { map.invalidateSize(); r
     <input id="chat-answer" type="text" maxlength="200" autocomplete="off" placeholder="City or destination" required>
     <button type="submit" id="chat-next">Next</button>
   </form>
-  <p class="chat-fallback" id="chat-fallback" role="status" hidden>Chat is unavailable right now. Try again or <a href="https://wa.me/16465156388" target="_blank" rel="noopener">message Aloft on WhatsApp</a>.</p>
+  <p class="chat-fallback" id="chat-fallback" role="status" hidden>Chat is unavailable right now. Try again or <a href="https://wa.me/16465156388" target="_blank" rel="noopener" onclick="trackQuoteClick(null, 'chat_fallback')">message Aloft on WhatsApp</a>.</p>
 </aside>
 <button class="chat-reopen" id="chat-reopen" type="button" aria-controls="chat-prompt" aria-expanded="false"><span class="chat-icon" aria-hidden="true"></span>Ask Aloft</button>
 <!-- Aloft live chat: replies are handled in the tawk.to mobile app. -->
@@ -1220,6 +1225,15 @@ const chatQuestion = document.getElementById('chat-question');
 const chatReopen = document.getElementById('chat-reopen');
 let chatDestination = '';
 let chatStep = 'destination';
+let chatQuoteTracked = false;
+function trackChatQuote(messageType) {
+  if (chatQuoteTracked) return;
+  chatQuoteTracked = true;
+  gtag('event', 'chat_quote_sent', { contact_method: 'live_chat', submission_type: messageType });
+}
+Tawk_API.onChatMessageVisitor = () => trackChatQuote('chat_message');
+Tawk_API.onOfflineSubmit = () => trackChatQuote('offline_message');
+Tawk_API.onChatEnded = () => { chatQuoteTracked = false; };
 function setChatPromptOpen(open) {
   chatPrompt.hidden = !open;
   chatReopen.hidden = open;
